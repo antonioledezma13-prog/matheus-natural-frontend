@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matheus Natural – Con la pureza de lo natural</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde:       #4a7c59;
+  --verde-claro: #6daa7f;
+  --verde-menta: #a8d5b5;
+  --verde-deep:  #2d5a3d;
+  --dorado:      #c9972a;
+  --dorado-light:#e8b84b;
+  --crema:       #faf7f0;
+  --text:        #2a2a1e;
+  --text-soft:   #5a5a47;
+  --muted:       #8a8a72;
+  --border:      rgba(74,124,89,0.2);
+  --border2:     rgba(74,124,89,0.35);
+  --surface:     rgba(255,255,255,0.7);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: #8bc34a;
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #7cb342; }
+::-webkit-scrollbar-thumb { background: var(--verde-deep); border-radius: 2px; }
+
+#canvas-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── NAV ─────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 76px;
+  background: rgba(139,195,74,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(74,124,89,0.3);
+  box-shadow: 0 2px 30px rgba(45,90,61,0.15);
+}
+.nav-logo { display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.nav-logo img { height:56px; width:auto; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(45,90,61,0.3)); }
+.nav-logo-text .brand { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--verde-deep); letter-spacing:2px; display:block; }
+.nav-logo-text .tagline { font-size:0.62rem; letter-spacing:3px; text-transform:uppercase; color:var(--dorado); }
+.nav-links { display:flex; gap:36px; list-style:none; align-items:center; }
+.nav-links a { text-decoration:none; color:var(--verde-deep); font-size:0.78rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; transition:color 0.2s; }
+.nav-links a:hover { color:var(--dorado); }
+.nav-cta { border:1px solid var(--verde-deep) !important; color:var(--verde-deep) !important; padding:8px 22px; border-radius:30px; transition:background 0.2s, color 0.2s !important; }
+.nav-cta:hover { background:var(--verde-deep) !important; color:#fff !important; }
+
+/* ── HERO ────────────────────────────────────────── */
+.hero { position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; padding:100px 0 80px; overflow:hidden; flex-direction:column; justify-content:center; }
+.hero-banner { width:100%; animation:fadeUp 0.9s ease both; margin-bottom:52px; position:relative; }
+.hero-banner img { width:100%; max-height:360px; object-fit:cover; object-position:center 40%; display:block; border-bottom:2px solid rgba(74,124,89,0.2); }
+.hero-banner::after { content:''; position:absolute; bottom:0; left:0; right:0; height:120px; background:linear-gradient(to bottom,transparent,#8bc34a); pointer-events:none; }
+.hero-body { width:100%; max-width:980px; padding:0 60px; animation:fadeUp 0.9s 0.2s ease both; display:flex; gap:80px; align-items:center; }
+.hero-content { flex:1; }
+.hero-eyebrow { font-size:0.68rem; letter-spacing:5px; text-transform:uppercase; color:var(--dorado); margin-bottom:20px; display:flex; align-items:center; gap:14px; }
+.hero-eyebrow::before { content:''; flex:0 0 32px; height:1px; background:var(--dorado); }
+h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.8rem,5.5vw,5rem); font-weight:300; line-height:1.05; letter-spacing:1px; margin-bottom:24px; color:var(--verde-deep); }
+h1 em { font-style:italic; color:#fff; text-shadow:0 2px 12px rgba(45,90,61,0.3); }
+h1 .line-sub { display:block; font-family:'Jost',sans-serif; font-size:0.28em; font-weight:500; letter-spacing:7px; text-transform:uppercase; color:var(--dorado); margin-top:14px; font-style:normal; }
+.hero-desc { font-size:1rem; color:var(--verde-deep); line-height:1.9; max-width:500px; margin-bottom:40px; }
+.hero-desc strong { font-weight:700; }
+.hero-btns { display:flex; gap:16px; flex-wrap:wrap; animation:fadeUp 0.9s 0.4s ease both; }
+.btn-main { padding:14px 36px; background:var(--verde-deep); color:#fff; font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:3px; text-transform:uppercase; border:none; border-radius:30px; cursor:pointer; text-decoration:none; transition:background 0.3s,box-shadow 0.3s; box-shadow:0 4px 24px rgba(45,90,61,0.35); }
+.btn-main:hover { background:#1a3d28; box-shadow:0 4px 40px rgba(45,90,61,0.5); }
+.btn-ghost { padding:14px 36px; background:transparent; color:var(--dorado); font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:3px; text-transform:uppercase; border:1px solid var(--dorado); border-radius:30px; cursor:pointer; text-decoration:none; transition:background 0.2s,color 0.2s; }
+.btn-ghost:hover { background:var(--dorado); color:#fff; }
+.hero-image-side { flex:0 0 320px; position:relative; display:flex; justify-content:center; align-items:center; }
+.hero-image-side img { width:260px; height:260px; object-fit:cover; border-radius:50%; border:6px solid rgba(255,255,255,0.4); box-shadow:0 16px 60px rgba(45,90,61,0.25); animation:fadeUp 0.9s 0.3s ease both; }
+.hero-image-side::before { content:''; position:absolute; inset:-20px; border-radius:50%; border:1px dashed rgba(255,255,255,0.35); animation:rotateSlow 30s linear infinite; }
+@keyframes rotateSlow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.hero-stats { margin-top:52px; display:flex; gap:40px; animation:fadeUp 0.9s 0.6s ease both; }
+.stat-num { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:600; color:var(--verde-deep); line-height:1; }
+.stat-num span { color:var(--dorado); }
+.stat-label { font-size:0.68rem; color:var(--verde-deep); letter-spacing:2px; text-transform:uppercase; margin-top:4px; opacity:0.75; }
+
+/* ── SECTIONS ────────────────────────────────────── */
+section { position:relative; z-index:1; padding:100px 60px; }
+.section-tag { font-size:0.65rem; letter-spacing:5px; text-transform:uppercase; color:var(--dorado); margin-bottom:16px; display:flex; align-items:center; gap:12px; }
+.section-tag::before { content:''; width:24px; height:1px; background:var(--dorado); }
+h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,3.5vw,3rem); font-weight:300; line-height:1.1; letter-spacing:1px; margin-bottom:16px; color:var(--verde-deep); }
+h2 em { color:#fff; font-style:italic; }
+.section-sub { font-size:0.95rem; color:var(--verde-deep); max-width:560px; line-height:1.85; margin-bottom:56px; opacity:0.85; }
+.divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,rgba(45,90,61,0.3),transparent); position:relative; z-index:1; }
+
+/* ── PRODUCTOS ───────────────────────────────────── */
+#productos { background:rgba(255,255,255,0.12); }
+.products-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:24px; }
+.product-card { background:rgba(255,255,255,0.55); border:1px solid rgba(255,255,255,0.5); border-radius:16px; padding:32px 28px; position:relative; overflow:hidden; transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s; backdrop-filter:blur(10px); }
+.product-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background:linear-gradient(90deg,var(--verde-deep),var(--dorado)); transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
+.product-card:hover { border-color:rgba(255,255,255,0.8); transform:translateY(-5px); box-shadow:0 16px 48px rgba(45,90,61,0.2); }
+.product-card:hover::before { transform:scaleX(1); }
+.product-icon { width:56px; height:56px; background:rgba(45,90,61,0.12); border:1px solid rgba(45,90,61,0.2); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin-bottom:20px; }
+.product-card h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--verde-deep); margin-bottom:10px; }
+.product-card p { font-size:0.85rem; color:var(--text-soft); line-height:1.8; }
+.product-tag { display:inline-block; margin-top:16px; padding:4px 12px; background:rgba(45,90,61,0.12); border-radius:20px; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--verde-deep); font-weight:600; }
+/* Skeleton loader */
+.skeleton { background:rgba(255,255,255,0.4); border-radius:8px; animation:shimmer 1.4s ease infinite; }
+@keyframes shimmer { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+/* ── PEDIDOS ─────────────────────────────────────── */
+#pedidos { background:rgba(255,255,255,0.08); }
+.pedido-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
+.pedido-lista h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--verde-deep); margin-bottom:20px; }
+.pedido-items { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; min-height:60px; }
+.pedido-item { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.6); border-radius:10px; backdrop-filter:blur(8px); }
+.pedido-item span { font-size:0.9rem; color:var(--verde-deep); font-weight:500; }
+.pedido-item button { background:none; border:none; cursor:pointer; color:#c0392b; font-size:1rem; padding:0 4px; transition:transform 0.2s; }
+.pedido-item button:hover { transform:scale(1.2); }
+.pedido-empty { font-size:0.85rem; color:var(--verde-deep); opacity:0.6; font-style:italic; padding:12px 0; }
+.btn-add { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; background:rgba(255,255,255,0.5); border:1px solid rgba(45,90,61,0.3); border-radius:30px; font-size:0.78rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--verde-deep); cursor:pointer; transition:background 0.2s; backdrop-filter:blur(6px); }
+.btn-add:hover { background:rgba(255,255,255,0.75); }
+
+/* Modal selector de producto */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:300; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-overlay.open { display:flex; }
+.modal { background:#fff; border-radius:18px; padding:36px; max-width:480px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+.modal h3 { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--verde-deep); margin-bottom:20px; }
+.modal-products { display:flex; flex-direction:column; gap:10px; max-height:320px; overflow-y:auto; }
+.modal-product-btn { display:flex; align-items:center; gap:14px; padding:12px 16px; border:1px solid var(--border2); border-radius:10px; background:transparent; cursor:pointer; text-align:left; transition:background 0.2s,border-color 0.2s; width:100%; }
+.modal-product-btn:hover { background:rgba(74,124,89,0.08); border-color:var(--verde-claro); }
+.modal-product-btn .mp-icon { font-size:1.4rem; }
+.modal-product-btn .mp-name { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:600; color:var(--verde-deep); display:block; }
+.modal-product-btn .mp-tag { font-size:0.7rem; color:var(--muted); letter-spacing:1px; }
+.modal-close { margin-top:20px; width:100%; padding:10px; background:transparent; border:1px solid var(--border2); border-radius:30px; color:var(--muted); font-family:'Jost',sans-serif; font-size:0.8rem; letter-spacing:2px; text-transform:uppercase; cursor:pointer; }
+.modal-close:hover { background:rgba(74,124,89,0.06); }
+
+/* ── NOSOTROS ────────────────────────────────────── */
+#nosotros { background:rgba(255,255,255,0.1); display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.about-img-wrap { position:relative; display:inline-block; width:100%; }
+.about-img-wrap img { width:100%; border-radius:20px; display:block; box-shadow:0 20px 60px rgba(45,90,61,0.2); }
+.about-img-wrap::after { content:''; position:absolute; bottom:-16px; right:-16px; width:80%; height:80%; border-radius:20px; border:2px solid rgba(255,255,255,0.4); z-index:-1; }
+.about-badge { position:absolute; bottom:24px; left:-16px; background:var(--verde-deep); color:#fff; padding:16px 20px; border-radius:12px; box-shadow:0 8px 30px rgba(45,90,61,0.35); text-align:center; }
+.about-badge .big { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; line-height:1; }
+.about-badge .small { font-size:0.7rem; letter-spacing:1.5px; text-transform:uppercase; opacity:0.85; }
+blockquote { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-style:italic; color:var(--verde-deep); line-height:1.85; border-left:3px solid rgba(255,255,255,0.6); padding-left:20px; margin-bottom:28px; }
+blockquote strong { color:var(--verde-deep); font-style:normal; font-weight:700; }
+.about-pillars { display:flex; flex-direction:column; gap:14px; margin-top:32px; }
+.pillar { display:flex; align-items:center; gap:16px; padding:14px 18px; background:rgba(255,255,255,0.45); border-radius:10px; border:1px solid rgba(255,255,255,0.5); backdrop-filter:blur(8px); }
+.pillar-icon { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,var(--verde-deep),var(--verde-claro)); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.pillar-text h4 { font-size:0.85rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--verde-deep); }
+.pillar-text p { font-size:0.78rem; color:var(--text-soft); }
+
+/* ── CONTACTO ────────────────────────────────────── */
+#contacto { background:rgba(255,255,255,0.12); }
+.contact-grid { display:grid; grid-template-columns:1fr 1.2fr; gap:60px; align-items:start; }
+.contact-info h3 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--verde-deep); margin-bottom:14px; font-weight:400; }
+.contact-info p { font-size:0.9rem; color:var(--verde-deep); line-height:1.9; margin-bottom:32px; opacity:0.85; }
+.contact-links { display:flex; flex-direction:column; gap:12px; }
+.contact-link { display:flex; align-items:center; gap:14px; padding:14px 18px; background:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.6); border-radius:10px; text-decoration:none; transition:border-color 0.2s,transform 0.2s; backdrop-filter:blur(8px); }
+.contact-link:hover { border-color:rgba(255,255,255,0.9); transform:translateX(4px); }
+.cl-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+.cl-icon.wa { background:rgba(37,211,102,0.2); }
+.cl-icon.ig { background:rgba(201,151,42,0.2); }
+.cl-icon.em { background:rgba(45,90,61,0.15); }
+.cl-text span { display:block; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; color:var(--verde-deep); opacity:0.7; }
+.cl-text strong { font-size:0.86rem; color:var(--verde-deep); }
+.contact-form { background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.7); border-radius:18px; padding:40px; backdrop-filter:blur(14px); box-shadow:0 8px 40px rgba(45,90,61,0.12); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-group { display:flex; flex-direction:column; gap:7px; margin-bottom:14px; }
+.form-group label { font-size:0.65rem; letter-spacing:2.5px; text-transform:uppercase; color:var(--verde-deep); font-weight:600; }
+.form-group input,.form-group select,.form-group textarea { background:rgba(255,255,255,0.75); border:1px solid rgba(45,90,61,0.25); border-radius:8px; padding:12px 16px; color:var(--text); font-family:'Jost',sans-serif; font-size:0.88rem; transition:border-color 0.2s; outline:none; }
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(--verde-deep); }
+.form-group textarea { resize:vertical; min-height:100px; }
+.btn-submit { width:100%; padding:14px; background:linear-gradient(135deg,var(--verde-deep),var(--verde-claro)); color:#fff; font-family:'Jost',sans-serif; font-size:0.85rem; font-weight:600; letter-spacing:3px; text-transform:uppercase; border:none; border-radius:30px; cursor:pointer; box-shadow:0 6px 28px rgba(45,90,61,0.35); transition:box-shadow 0.2s,transform 0.2s; }
+.btn-submit:hover { box-shadow:0 8px 40px rgba(45,90,61,0.5); transform:translateY(-1px); }
+
+/* Alert inline */
+.alert { display:none; margin-top:14px; padding:12px 16px; border-radius:8px; font-size:0.85rem; font-weight:500; }
+.alert.success { background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.4); color:#166534; display:block; }
+.alert.error   { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.35); color:#991b1b; display:block; }
+
+/* ── FOOTER ──────────────────────────────────────── */
+footer { position:relative; z-index:1; background:var(--verde-deep); border-top:1px solid rgba(255,255,255,0.1); padding:48px 60px 28px; display:flex; flex-direction:column; align-items:center; gap:20px; }
+.footer-brand { display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:8px; }
+.footer-brand img { height:70px; width:auto; object-fit:contain; filter:brightness(1.2); }
+.footer-brand p { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-style:italic; color:rgba(255,255,255,0.6); }
+footer > p { font-size:0.72rem; color:rgba(255,255,255,0.4); letter-spacing:1px; }
+.footer-links { display:flex; gap:28px; list-style:none; }
+.footer-links a { font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s; }
+.footer-links a:hover { color:#a8d5b5; }
+
+/* ── WA FLOAT ────────────────────────────────────── */
+.wa-float { position:fixed; bottom:30px; right:30px; z-index:200; width:58px; height:58px; background:#25d366; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; box-shadow:0 4px 20px rgba(37,211,102,0.4); text-decoration:none; animation:waBounce 2.5s ease-in-out infinite; transition:transform 0.2s; }
+.wa-float:hover { transform:scale(1.1); }
+@keyframes waBounce { 0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.4)} 50%{box-shadow:0 4px 40px rgba(37,211,102,0.7)} }
+
+/* ── ANIMATIONS ──────────────────────────────────── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width:900px) {
+  nav { padding:0 20px; min-height:64px; }
+  .nav-logo img { height:44px; }
+  .nav-links { display:none; }
+  .hero-body { flex-direction:column; gap:40px; padding:0 24px; }
+  .hero-image-side { flex:none; order:-1; }
+  .hero-image-side img { width:180px; height:180px; }
+  .hero-image-side::before { display:none; }
+  section { padding:80px 24px; }
+  #nosotros { grid-template-columns:1fr; gap:48px; }
+  .pedido-grid { grid-template-columns:1fr; }
+  .contact-grid { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+  footer { padding:40px 24px 24px; }
+  .hero-stats { gap:24px; flex-wrap:wrap; }
+}
+</style>
+</head>
+<body>
+<canvas id="canvas-bg"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="images/logo.jpg" alt="Matheus Natural">
+    <div class="nav-logo-text">
+      <span class="brand">Matheus</span>
+      <span class="tagline">Con la pureza de lo natural</span>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#pedidos">Pedidos</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#contacto" class="nav-cta">Contáctanos</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-banner">
+    <img src="images/productos-hero.webp" alt="Matheus Natural – cosméticos artesanales">
+  </div>
+  <div class="hero-body">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Extractos · Cosméticos · Naturales</div>
+      <h1>La naturaleza<br><em>cuida tu piel</em><span class="line-sub">Con la pureza de lo natural</span></h1>
+      <p class="hero-desc">Cosméticos artesanales elaborados con <strong>extractos naturales y sanadoras plantas</strong>. Cada producto nace del respeto por la tierra y el cuidado genuino de tu piel.</p>
+      <div class="hero-btns">
+        <a href="#productos" class="btn-main">Ver Productos</a>
+        <a href="#pedidos" class="btn-ghost">Hacer Pedido</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">100<span>%</span></div><div class="stat-label">Natural</div></div>
+        <div class="stat-item"><div class="stat-num">0<span>%</span></div><div class="stat-label">Químicos dañinos</div></div>
+        <div class="stat-item"><div class="stat-num">✦</div><div class="stat-label">Artesanal</div></div>
+      </div>
+    </div>
+    <div class="hero-image-side">
+      <img src="images/duo-productos.png" alt="Dúo Agua Micelar y Sérum Hidratante">
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRODUCTOS -->
+<section id="productos">
+  <div class="section-tag">Nuestros productos</div>
+  <h2>Esencia <em>Natural</em> para tu Piel</h2>
+  <p class="section-sub">Formulados con ingredientes 100% naturales, sin parabenos ni químicos agresivos. La botánica al servicio de tu bienestar.</p>
+  <div class="products-grid" id="products-grid">
+    <!-- Skeleton loaders -->
+    <div class="product-card"><div class="skeleton" style="height:56px;width:56px;border-radius:14px;margin-bottom:20px"></div><div class="skeleton" style="height:22px;width:70%;margin-bottom:10px"></div><div class="skeleton" style="height:14px;width:100%;margin-bottom:6px"></div><div class="skeleton" style="height:14px;width:85%"></div></div>
+    <div class="product-card"><div class="skeleton" style="height:56px;width:56px;border-radius:14px;margin-bottom:20px"></div><div class="skeleton" style="height:22px;width:70%;margin-bottom:10px"></div><div class="skeleton" style="height:14px;width:100%;margin-bottom:6px"></div><div class="skeleton" style="height:14px;width:85%"></div></div>
+    <div class="product-card"><div class="skeleton" style="height:56px;width:56px;border-radius:14px;margin-bottom:20px"></div><div class="skeleton" style="height:22px;width:70%;margin-bottom:10px"></div><div class="skeleton" style="height:14px;width:100%;margin-bottom:6px"></div><div class="skeleton" style="height:14px;width:85%"></div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PEDIDOS -->
+<section id="pedidos">
+  <div class="section-tag">Haz tu pedido</div>
+  <h2>Tu rutina <em>natural</em> a un clic</h2>
+  <p class="section-sub">Selecciona los productos que deseas, llena tus datos y te contactamos por WhatsApp para confirmar.</p>
+  <div class="pedido-grid">
+    <div class="pedido-lista">
+      <h3>🧴 Productos seleccionados</h3>
+      <div class="pedido-items" id="pedido-items">
+        <p class="pedido-empty">Aún no has agregado productos.</p>
+      </div>
+      <button class="btn-add" onclick="abrirModal()">＋ Agregar producto</button>
+    </div>
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="p-nombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label>WhatsApp</label>
+          <input type="text" id="p-contacto" placeholder="+58 414 000 0000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Dirección / Zona de entrega</label>
+        <input type="text" id="p-direccion" placeholder="Ciudad, sector o referencia">
+      </div>
+      <div class="form-group">
+        <label>Notas adicionales</label>
+        <textarea id="p-notas" placeholder="Indicaciones especiales, tipo de piel, alergias..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="enviarPedido()">Enviar Pedido por WhatsApp →</button>
+      <div class="alert" id="pedido-alert"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal selector -->
+<div class="modal-overlay" id="modal-overlay" onclick="cerrarModalFuera(event)">
+  <div class="modal">
+    <h3>Selecciona un producto</h3>
+    <div class="modal-products" id="modal-products"></div>
+    <button class="modal-close" onclick="cerrarModal()">Cerrar</button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="about-visual reveal">
+    <div class="about-img-wrap">
+      <img src="images/productos-hero.webp" alt="Productos Matheus Natural">
+      <div class="about-badge"><div class="big">🌿</div><div class="small">100% Artesanal</div></div>
+    </div>
+  </div>
+  <div class="about-content reveal">
+    <div class="section-tag">Nuestra historia</div>
+    <h2>Belleza <em>consciente</em> desde la raíz</h2>
+    <blockquote>Creemos que la naturaleza tiene todo lo que tu piel necesita. Cada producto <strong>Matheus Natural</strong> es elaborado con dedicación, respetando los tiempos y procesos naturales.</blockquote>
+    <p class="section-sub" style="margin-bottom:24px;">Somos una marca venezolana comprometida con la cosmética limpia. Nuestros extractos y preparaciones artesanales siguen fórmulas que honran el poder sanador de las plantas.</p>
+    <div class="about-pillars">
+      <div class="pillar"><div class="pillar-icon">🌱</div><div class="pillar-text"><h4>Ingredientes puros</h4><p>Solo lo que la naturaleza ofrece, sin rellenos artificiales</p></div></div>
+      <div class="pillar"><div class="pillar-icon">🤲</div><div class="pillar-text"><h4>Elaboración artesanal</h4><p>Cada producto hecho con cuidado y en pequeños lotes</p></div></div>
+      <div class="pillar"><div class="pillar-icon">💚</div><div class="pillar-text"><h4>Cosmetología consciente</h4><p>Fórmulas que respetan tu piel y el medio ambiente</p></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="section-tag">Escríbenos</div>
+      <h3>¿Lista para tu belleza consciente?</h3>
+      <p>Estamos aquí para asesorarte. Contáctanos por el canal que prefieras.</p>
+      <div class="contact-links">
+        <a href="https://wa.me/584144430442" class="contact-link" target="_blank">
+          <div class="cl-icon wa">📱</div><div class="cl-text"><span>WhatsApp</span><strong>0414-4430442</strong></div>
+        </a>
+        <a href="https://instagram.com/matheusnaturalca" class="contact-link" target="_blank">
+          <div class="cl-icon ig">📸</div><div class="cl-text"><span>Instagram</span><strong>@matheusnaturalca</strong></div>
+        </a>
+        <a href="mailto:matheusnatural@gmail.com" class="contact-link">
+          <div class="cl-icon em">✉️</div><div class="cl-text"><span>Email</span><strong>matheusnatural@gmail.com</strong></div>
+        </a>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <div class="form-row">
+        <div class="form-group"><label>Nombre</label><input type="text" id="c-nombre" placeholder="Tu nombre"></div>
+        <div class="form-group">
+          <label>Tipo de piel</label>
+          <select id="c-tipopiel">
+            <option value="">Selecciona...</option>
+            <option>Piel normal</option><option>Piel seca</option>
+            <option>Piel grasa</option><option>Piel mixta</option><option>Piel sensible</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>WhatsApp o Email</label><input type="text" id="c-contacto" placeholder="+58 414 000 0000"></div>
+      <div class="form-group">
+        <label>Producto de interés</label>
+        <select id="c-producto">
+          <option value="">Selecciona un producto...</option>
+          <option>Sérum Hidratante</option><option>Agua Micelar</option>
+          <option>Extracto de Caléndula</option><option>Crema Restauradora</option>
+          <option>Tónico Floral</option><option>Aceite Facial Seco</option>
+          <option>Quiero asesoría completa</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Cuéntanos</label><textarea id="c-mensaje" placeholder="Describe tu tipo de piel, inquietudes o lo que buscas lograr..."></textarea></div>
+      <button class="btn-submit" onclick="enviarContacto()">Enviar Consulta →</button>
+      <div class="alert" id="contacto-alert"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <img src="images/logo.jpg" alt="Matheus Natural">
+    <p>Con la pureza de lo natural</p>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#pedidos">Pedidos</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <p>© 2025 Matheus Natural · Todos los derechos reservados · @matheusnaturalca</p>
+</footer>
+
+<a href="https://wa.me/584144430442" class="wa-float" title="Escríbenos">💬</a>
+
+<script>
+// ══════════════════════════════════════════════════
+// CONFIG – cambia esto por tu URL de Render
+// ══════════════════════════════════════════════════
+const BACKEND_URL = 'https://matheus-natural-backend.onrender.com';
+
+// ══════════════════════════════════════════════════
+// CANVAS – LLUVIA DE GIRASOLES
+// ══════════════════════════════════════════════════
+const canvas = document.getElementById('canvas-bg');
+const ctx    = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+function drawSunflower(cx, cy, r, rotation, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(cx, cy);
+  ctx.rotate(rotation);
+  const petalCount = 13;
+  const petalLen   = r * 1.55;
+  for (let i = 0; i < petalCount; i++) {
+    const angle = (i / petalCount) * Math.PI * 2;
+    ctx.save();
+    ctx.rotate(angle);
+    const g = ctx.createRadialGradient(0, -(r*0.4), 0, 0, -(petalLen*0.55), petalLen);
+    g.addColorStop(0,   'rgba(245,195,30,0.97)');
+    g.addColorStop(0.5, 'rgba(225,155,20,0.88)');
+    g.addColorStop(1,   'rgba(200,100,10,0.35)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(0, -(r + petalLen*0.38), r*0.24, petalLen*0.52, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+  const cg = ctx.createRadialGradient(0,0,0,0,0,r);
+  cg.addColorStop(0,   'rgba(55,25,5,0.96)');
+  cg.addColorStop(0.65,'rgba(85,45,8,0.92)');
+  cg.addColorStop(1,   'rgba(115,65,12,0.7)');
+  ctx.fillStyle = cg;
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(195,135,28,0.55)';
+  for (let i = 0; i < 14; i++) {
+    const a = (i/14)*Math.PI*2;
+    ctx.beginPath();
+    ctx.arc(Math.cos(a)*r*0.58, Math.sin(a)*r*0.58, r*0.09, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+class Sunflower {
+  constructor() { this.reset(true); }
+  reset(initial) {
+    this.x = Math.random() * canvas.width;
+    this.y = initial ? Math.random() * canvas.height : -60;
+    this.r = Math.random() * 16 + 9;
+    this.speedY = Math.random() * 0.55 + 0.2;
+    this.speedX = (Math.random() - 0.5) * 0.45;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - 0.5) * 0.011;
+    this.opacity = Math.random() * 0.38 + 0.1;
+    this.swingSpeed = Math.random() * 0.016 + 0.004;
+    this.swingPhase = Math.random() * Math.PI * 2;
+  }
+  update() {
+    this.swingPhase += this.swingSpeed;
+    this.x += this.speedX + Math.sin(this.swingPhase) * 0.5;
+    this.y += this.speedY;
+    this.rotation += this.rotSpeed;
+    if (this.y > canvas.height + 70) this.reset(false);
+  }
+  draw() { drawSunflower(this.x, this.y, this.r, this.rotation, this.opacity); }
+}
+const sunflowers = Array.from({ length: 42 }, () => new Sunflower());
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  sunflowers.forEach(s => { s.update(); s.draw(); });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ══════════════════════════════════════════════════
+// SCROLL REVEAL
+// ══════════════════════════════════════════════════
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ══════════════════════════════════════════════════
+// CATÁLOGO – carga desde backend
+// ══════════════════════════════════════════════════
+let catalogoProductos = [];
+
+async function cargarProductos() {
+  const grid = document.getElementById('products-grid');
+  try {
+    const res  = await fetch(`${BACKEND_URL}/api/productos`);
+    const json = await res.json();
+    catalogoProductos = json.data;
+    grid.innerHTML = catalogoProductos.map(p => `
+      <div class="product-card reveal">
+        <div class="product-icon">${p.icono}</div>
+        <h3>${p.nombre}</h3>
+        <p>${p.descripcion}</p>
+        <span class="product-tag">${p.tag}</span>
+      </div>`).join('');
+    // Re-observe nuevas cards
+    grid.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    // Rellenar modal
+    poblarModal();
+  } catch (err) {
+    grid.innerHTML = '<p style="color:var(--verde-deep);opacity:0.7">No se pudo cargar el catálogo. Intenta más tarde.</p>';
+  }
+}
+cargarProductos();
+
+// ══════════════════════════════════════════════════
+// SISTEMA DE PEDIDOS
+// ══════════════════════════════════════════════════
+let pedidoItems = [];
+
+function poblarModal() {
+  const container = document.getElementById('modal-products');
+  container.innerHTML = catalogoProductos.map(p => `
+    <button class="modal-product-btn" onclick="agregarItem(${p.id})">
+      <span class="mp-icon">${p.icono}</span>
+      <span><span class="mp-name">${p.nombre}</span><span class="mp-tag">${p.tag}</span></span>
+    </button>`).join('');
+}
+
+function abrirModal() { document.getElementById('modal-overlay').classList.add('open'); }
+function cerrarModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function cerrarModalFuera(e) { if (e.target.id === 'modal-overlay') cerrarModal(); }
+
+function agregarItem(id) {
+  const prod = catalogoProductos.find(p => p.id === id);
+  if (!prod) return;
+  // Evitar duplicados
+  if (pedidoItems.find(i => i.id === id)) { cerrarModal(); return; }
+  pedidoItems.push({ id, nombre: prod.nombre, icono: prod.icono });
+  renderPedidoItems();
+  cerrarModal();
+}
+
+function quitarItem(id) {
+  pedidoItems = pedidoItems.filter(i => i.id !== id);
+  renderPedidoItems();
+}
+
+function renderPedidoItems() {
+  const container = document.getElementById('pedido-items');
+  if (pedidoItems.length === 0) {
+    container.innerHTML = '<p class="pedido-empty">Aún no has agregado productos.</p>';
+    return;
+  }
+  container.innerHTML = pedidoItems.map(i => `
+    <div class="pedido-item">
+      <span>${i.icono} ${i.nombre}</span>
+      <button onclick="quitarItem(${i.id})" title="Quitar">✕</button>
+    </div>`).join('');
+}
+
+async function enviarPedido() {
+  const nombre    = document.getElementById('p-nombre').value.trim();
+  const contacto  = document.getElementById('p-contacto').value.trim();
+  const direccion = document.getElementById('p-direccion').value.trim();
+  const notas     = document.getElementById('p-notas').value.trim();
+  const btn       = document.querySelector('#pedidos .btn-submit');
+  const alertEl   = document.getElementById('pedido-alert');
+
+  alertEl.className = 'alert';
+
+  if (!nombre || !contacto) {
+    alertEl.textContent = 'Por favor completa Nombre y WhatsApp.';
+    alertEl.className = 'alert error';
+    return;
+  }
+  if (pedidoItems.length === 0) {
+    alertEl.textContent = 'Agrega al menos un producto al pedido.';
+    alertEl.className = 'alert error';
+    return;
+  }
+
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  try {
+    const res  = await fetch(`${BACKEND_URL}/api/pedidos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, contacto, direccion, notas, items: pedidoItems })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alertEl.textContent = '✅ ¡Pedido enviado! Te contactaremos pronto por WhatsApp.';
+      alertEl.className = 'alert success';
+      pedidoItems = [];
+      renderPedidoItems();
+      ['p-nombre','p-contacto','p-direccion','p-notas'].forEach(id => document.getElementById(id).value = '');
+    } else {
+      alertEl.textContent = data.error || 'Error al enviar. Intenta de nuevo.';
+      alertEl.className = 'alert error';
+    }
+  } catch {
+    alertEl.textContent = 'Sin conexión al servidor. Intenta de nuevo.';
+    alertEl.className = 'alert error';
+  } finally {
+    btn.textContent = 'Enviar Pedido por WhatsApp →';
+    btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════
+// FORMULARIO DE CONTACTO
+// ══════════════════════════════════════════════════
+async function enviarContacto() {
+  const nombre   = document.getElementById('c-nombre').value.trim();
+  const contacto = document.getElementById('c-contacto').value.trim();
+  const tipoPiel = document.getElementById('c-tipopiel').value;
+  const producto = document.getElementById('c-producto').value;
+  const mensaje  = document.getElementById('c-mensaje').value.trim();
+  const btn      = document.querySelector('#contacto .btn-submit');
+  const alertEl  = document.getElementById('contacto-alert');
+
+  alertEl.className = 'alert';
+
+  if (!nombre || !contacto) {
+    alertEl.textContent = 'Por favor completa Nombre y Contacto.';
+    alertEl.className = 'alert error';
+    return;
+  }
+
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  try {
+    const res  = await fetch(`${BACKEND_URL}/api/contacto`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, contacto, tipoPiel, producto, mensaje })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alertEl.textContent = '✅ ¡Consulta enviada! Te respondemos pronto.';
+      alertEl.className = 'alert success';
+      ['c-nombre','c-contacto','c-mensaje'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('c-tipopiel').value = '';
+      document.getElementById('c-producto').value = '';
+    } else {
+      alertEl.textContent = data.error || 'Error al enviar. Intenta de nuevo.';
+      alertEl.className = 'alert error';
+    }
+  } catch {
+    alertEl.textContent = 'Sin conexión al servidor. Intenta de nuevo.';
+    alertEl.className = 'alert error';
+  } finally {
+    btn.textContent = 'Enviar Consulta →';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

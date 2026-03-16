@@ -195,12 +195,38 @@ blockquote strong { color:var(--verde-deep); font-style:normal; font-weight:700;
 /* ── FOOTER ──────────────────────────────────────── */
 footer { position:relative; z-index:1; background:var(--verde-deep); border-top:1px solid rgba(255,255,255,0.1); padding:48px 60px 28px; display:flex; flex-direction:column; align-items:center; gap:20px; }
 .footer-brand { display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:8px; }
-.footer-brand img { height:80px; width:auto; object-fit:contain; mix-blend-mode:screen; }
+.footer-brand img { height:160px; width:auto; object-fit:contain; mix-blend-mode:screen; }
 .footer-brand p { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-style:italic; color:rgba(255,255,255,0.6); }
 footer > p { font-size:0.72rem; color:rgba(255,255,255,0.4); letter-spacing:1px; }
 .footer-links { display:flex; gap:28px; list-style:none; }
 .footer-links a { font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.5); text-decoration:none; transition:color 0.2s; }
 .footer-links a:hover { color:#a8d5b5; }
+
+.footer-dev {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  width: 100%;
+  justify-content: center;
+}
+.footer-dev span {
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+}
+.footer-dev img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.footer-dev img:hover { opacity: 1; }
 
 /* ── WA FLOAT ────────────────────────────────────── */
 .wa-float { position:fixed; bottom:30px; right:30px; z-index:200; width:58px; height:58px; background:#25d366; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; box-shadow:0 4px 20px rgba(37,211,102,0.4); text-decoration:none; animation:waBounce 2.5s ease-in-out infinite; transition:transform 0.2s; }
@@ -428,6 +454,10 @@ footer > p { font-size:0.72rem; color:rgba(255,255,255,0.4); letter-spacing:1px;
     <li><a href="#contacto">Contacto</a></li>
   </ul>
   <p>© 2025 Matheus Natural · Todos los derechos reservados · @matheusnaturalca</p>
+  <div class="footer-dev">
+    <span>Diseñado y desarrollado por</span>
+    <img src="images/logo_hub_clean.png" alt="Impulso Hub Web Inc.">
+  </div>
 </footer>
 
 <a href="https://wa.me/584144430442" class="wa-float" title="Escríbenos">💬</a>
